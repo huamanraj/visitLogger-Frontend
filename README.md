@@ -1,8 +1,20 @@
-# React + Vite
+Here's a concise README for your project:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+# Website Analytics Tracker
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A lightweight application for tracking website viewer counts and saving visitor information securely in a database. Built with Node.js, React, and Appwrite, this project enables easy analytics tracking for websites.
+
+## Features
+- Track website viewer counts by `scriptId`.
+- Save and query visitor information using Appwrite's database.
+- Backend API for analytics data fetching.
+- Frontend interface for viewing analytics.
+
+## Tech Stack
+- **Frontend**: React
+- **Backend**: Node.js
+- **Database**: Appwrite
+- **Other Tools**: Vite for development, Appwrite SDK for database operations.
+
