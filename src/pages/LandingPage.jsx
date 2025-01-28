@@ -1,8 +1,10 @@
 // LandingPage.jsx
 import React from 'react';
 import { Activity, ArrowRight, Code2, Globe2, Users, BarChart3 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function LandingPage() {
+    let navigate = useNavigate();
     return (
         <div className="min-h-screen bg-black text-white overflow-hidden relative selection:bg-white/10">
             {/* Gradient background */}
@@ -20,14 +22,14 @@ export default function LandingPage() {
                             <Activity className="w-5 h-5 text-white" />
                             <span className="font-mono font-bold">visit_logger</span>
                         </div>
-                        <div className="hidden md:flex items-center space-x-8">
-                            <button className="px-4 py-1.5 text-sm font-medium hover:text-white/70 transition-colors">
+                        <div  className="hidden md:flex items-center space-x-8">
+                            <button onClick={() => { navigate('/doc') }} className="px-4 py-1.5 text-sm font-medium hover:text-white/70 transition-colors">
                                 Documentation
                             </button>
-                            <button className="px-4 py-1.5 text-sm text-white/70 hover:text-white transition-colors">
+                            <button onClick={() => { navigate('/login') }} className="px-4 py-1.5 text-sm text-white/70 hover:text-white transition-colors">
                                 Analytics
                             </button>
-                            <button className="px-4 py-1.5 bg-white text-black rounded-lg text-sm font-medium hover:bg-white/90 transition-all">
+                            <button onClick={()=>{navigate('/login')}}  className="px-4 py-1.5 bg-white text-black rounded-lg text-sm font-medium hover:bg-white/90 transition-all">
                                 Start Tracking →
                             </button>
                         </div>
@@ -53,11 +55,11 @@ export default function LandingPage() {
                             No configuration needed.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <button className="w-full sm:w-auto group px-6 py-3 bg-white text-black rounded-lg font-medium hover:bg-white/90 transition-all flex items-center justify-center">
+                            <button onClick={() => { navigate('/login') }} className="w-full sm:w-auto group px-6 py-3 bg-white text-black rounded-lg font-medium hover:bg-white/90 transition-all flex items-center justify-center">
                                 Deploy Now
                                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </button>
-                            <button className="w-full sm:w-auto px-6 py-3 border border-white/10 rounded-lg font-medium hover:bg-white/5 transition-all">
+                            <button onClick={() => { navigate('/doc') }} className="w-full sm:w-auto px-6 py-3 border border-white/10 rounded-lg font-medium hover:bg-white/5 transition-all">
                                 View Documentation
                             </button>
                         </div>
