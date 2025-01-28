@@ -1,1 +1,42 @@
 @import "tailwindcss";
+
+/* Add these custom animations to your global CSS */
+@keyframes glow {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-glow {
+    animation: glow 8s infinite;
+}
+
+.animate-float {
+    animation: float 6s infinite;
+}
+
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+    animation-delay: 4s;
+}

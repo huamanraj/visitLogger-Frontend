@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Databases, Query, Client } from 'appwrite';
-
+import { Link } from 'react-router-dom';
 const Dashboard = () => {
-    
     const { user, logout } = useAuth();
     const [scripts, setScripts] = useState([]);
     const [selectedScript, setSelectedScript] = useState(null);
     const [analytics, setAnalytics] = useState([]);
     const [scriptName, setScriptName] = useState('');
     const [expandedScriptId, setExpandedScriptId] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [copyFeedback, setCopyFeedback] = useState('');
 
+    
     const databases = new Databases(new Client()
         .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT)
         .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID));
@@ -78,12 +80,10 @@ const Dashboard = () => {
     const handleLogout = async () => {
         try {
             await logout();
-            // Redirect will be handled by your AuthContext/Router
         } catch (error) {
             console.error('Error logging out:', error);
         }
     };
-
 
     const copyScript = (script) => {
         navigator.clipboard.writeText(script);
@@ -95,94 +95,110 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-            <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-            <button
-                onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
-            >
-                Logout
-            </button>
-            <div className="mb-6">
-                <input
-                    type="text"
-                    placeholder="Script Name"
-                    value={scriptName}
-                    onChange={(e) => setScriptName(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
-                />
-                <button
-                    onClick={createScript}
-                    className="bg-purple-500 text-white p-2 rounded"
-                >
-                    Create Script
-                </button>
-            </div>
-
-            <div className="mb-6">
-                <h2 className="text-xl font-bold mb-4">Your Scripts</h2>
-                <ul>
-                    {scripts.map((script) => (
-                        <li key={script.scriptId} className="mb-4 p-4 bg-gray-50 rounded-lg">
-                            <div
-                                className="flex justify-between items-center cursor-pointer"
-                                onClick={() => toggleAccordion(script.scriptId)}
-                            >
-                                <h3 className="text-lg font-semibold">{script.scriptName}</h3>
-                                <span>{expandedScriptId === script.scriptId ? '▼' : '▶'}</span>
-                            </div>
-
-                            {expandedScriptId === script.scriptId && (
-                                <div className="mt-4">
-                                    <pre className="p-2 bg-gray-200 rounded overflow-x-auto">
-                                        <code>{script.script}</code>
-                                    </pre>
-                                    <p className="mt-2 text-sm text-gray-600">User ID: {script.userId}</p>
-                                    <button
-                                        onClick={() => copyScript(script.script)}
-                                        className="mt-2 bg-blue-500 text-white p-2 rounded"
-                                    >
-                                        Copy Script
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setSelectedScript(script.scriptId);
-                                            fetchAnalytics(script.scriptId);
-                                        }}
-                                        className="mt-2 bg-green-500 text-white p-2 rounded ml-2"
-                                    >
-                                        View Analytics
-                                    </button>
-                                </div>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-
-            {selectedScript && (
-                <div>
-                    <h2 className="text-xl font-bold mb-4">Analytics for {scripts.find(s => s.scriptId === selectedScript)?.scriptName}</h2>
-                    <table className="min-w-full bg-white border">
-                        <thead>
-                            <tr>
-                                <th className="py-2 px-4 border-b">IP Address</th>
-                                <th className="py-2 px-4 border-b">Timestamp</th>
-                                <th className="py-2 px-4 border-b">Agent</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {analytics.map((data, index) => (
-                                <tr key={index}>
-                                    <td className="py-2 px-4 border-b">{data.ipAddress}</td>
-                                    <td className="py-2 px-4 border-b">{data.timestamp}</td>
-                                    <td className="py-2 px-4 border-b text-clip">{data.userAgent}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+        <div className="min-h-screen bg-[#000000] text-white p-8">
+            <div className="max-w-4xl mx-auto">
+                {/* Header Section */}
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+                    <button
+                        onClick={handleLogout}
+                        className="bg-white hover:bg-gray-200 text-black px-4 py-2 rounded-md transition-all duration-200 text-sm font-medium"
+                    >
+                        Logout
+                    </button>
                 </div>
-            )}
+
+                {/* Script Creation Section */}
+                <div className="mb-8 space-y-4">
+                    <div className="flex gap-4">
+                        <input
+                            type="text"
+                            placeholder="Enter script name..."
+                            value={scriptName}
+                            onChange={(e) => setScriptName(e.target.value)}
+                            className="flex-1 p-3 border border-gray-800 rounded-md bg-[#111111] text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
+                        />
+                        <button
+                            onClick={createScript}
+                            className="bg-white hover:bg-gray-200 text-black px-6 py-3 rounded-md transition-all duration-200 text-sm font-medium whitespace-nowrap"
+                        >
+                            Create Script
+                        </button>
+                    </div>
+                </div>
+
+                {/* Scripts List Section */}
+                <div className="mb-8 space-y-4">
+                    <h2 className="text-xl font-semibold tracking-tight">Your Scripts</h2>
+                    <ul className="space-y-3">
+                        {scripts.map((script) => (
+                            <li key={script.scriptId} className="border border-gray-800 rounded-md bg-[#111111] overflow-hidden">
+                                <div
+                                    className="flex justify-between items-center p-4 cursor-pointer hover:bg-[#1a1a1a] transition-all"
+                                    onClick={() => toggleAccordion(script.scriptId)}
+                                >
+                                    <h3 className="text-sm font-medium">{script.scriptName}</h3>
+                                    <span className="text-gray-400 text-sm">
+                                        {expandedScriptId === script.scriptId ? '−' : '+'}
+                                    </span>
+                                </div>
+                                {expandedScriptId === script.scriptId && (
+                                    <div className="p-4 border-t border-gray-800">
+                                        <pre className="p-3 bg-[#0a0a0a] rounded-md overflow-x-auto">
+                                            <code className="text-sm text-gray-300 font-mono">{script.script}</code>
+                                        </pre>
+                                        <div className="mt-4 space-y-2">
+                                            <button
+                                                onClick={() => copyScript(script.script)}
+                                                className="w-full bg-[#111111] hover:bg-[#1a1a1a] border border-gray-800 text-white p-2 rounded-md transition-all text-sm font-medium"
+                                            >
+                                                Copy Script
+                                            </button>
+                                            <Link
+                                                to={`/analytics/${script.scriptId}`}
+                                                className="w-full bg-white hover:bg-gray-200 text-black p-2 rounded-md transition-all text-sm font-medium text-center block"
+                                            >
+                                                View Analytics
+                                            </Link>
+                                        </div>
+                                    </div>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                {/* Analytics Section */}
+                {selectedScript && (
+                    <div className="space-y-4">
+                        <h2 className="text-xl font-semibold tracking-tight">
+                            Analytics for {scripts.find(s => s.scriptId === selectedScript)?.scriptName}
+                        </h2>
+                        <div className="border border-gray-800 rounded-md overflow-hidden">
+                            <table className="w-full">
+                                <thead className="bg-[#111111]">
+                                    <tr>
+                                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">IP Address</th>
+                                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">Timestamp</th>
+                                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">Agent</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-800">
+                                    {analytics.map((data, index) => (
+                                        <tr key={index} className="hover:bg-[#111111] transition-all">
+                                            <td className="py-3 px-4 text-sm text-gray-300">{data.ipAddress}</td>
+                                            <td className="py-3 px-4 text-sm text-gray-300">{data.timestamp}</td>
+                                            <td className="py-3 px-4 text-sm text-gray-300 truncate max-w-xs">
+                                                {data.userAgent}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

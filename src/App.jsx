@@ -4,15 +4,21 @@ import { AuthProvider } from './contexts/AuthContext';
 import LoginSignup from './components/LoginSignup';
 import Dashboard from './components/Dashboard';
 import PrivateRoute from './components/PrivateRoute'; 
+import LandingPage from './pages/LandingPage';
+import DocumentationPage from './pages/DocumentationPage';
+import AnalyticsPage from './components/AnalyticsPage';
 
 const App = () => {
   return (
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/doc" element={<DocumentationPage/>} />
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/analytics/:scriptId" element={<PrivateRoute><AnalyticsPage /></PrivateRoute>} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
     </AuthProvider>

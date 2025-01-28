@@ -4,7 +4,10 @@ export default {
     './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      'geist-sans': ['Geist Sans', 'sans-serif'],
+      'geist-mono': ['Geist Mono', 'monospace'],
+},
   },
   plugins: [],
 };

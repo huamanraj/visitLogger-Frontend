@@ -97,7 +97,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const signUp = async (email, password, name = '') => {
+    const signUp = async (email, password, name = ' ') => {
         try {
             setLoading(true);
             setError(null);
