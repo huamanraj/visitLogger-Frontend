@@ -7,6 +7,8 @@ import PrivateRoute from './components/PrivateRoute';
 import LandingPage from './pages/LandingPage';
 import DocumentationPage from './pages/DocumentationPage';
 import AnalyticsPage from './components/AnalyticsPage';
+import OAuthCallback from './contexts/OAuthCallback';
+
 
 const App = () => {
   return (
@@ -19,6 +21,7 @@ const App = () => {
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/analytics/:scriptId" element={<PrivateRoute><AnalyticsPage /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="/auth/callback" element={<OAuthCallback />} />
         </Routes>
       </Router>
     </AuthProvider>

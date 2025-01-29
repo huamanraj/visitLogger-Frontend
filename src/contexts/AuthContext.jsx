@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { Client, Account } from 'appwrite';
+import { Client, Account, OAuthProvider } from 'appwrite';
 
 const AuthContext = createContext();
 
@@ -97,6 +97,29 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+
+    const loginWithOAuth = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            await account.createOAuth2Session(
+                OAuthProvider.Google,
+                window.location.origin + '/dashboard', // Ensure correct origin
+                window.location.origin + '/login'
+            );
+        } catch (error) {
+            const authError = new AuthError(
+                error?.message || 'OAuth login failed',
+                error?.code || 'UNKNOWN_ERROR'
+            );
+            setError(authError);
+            throw authError;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     const signUp = async (email, password, name = ' ') => {
         try {
             setLoading(true);
@@ -164,6 +187,7 @@ export const AuthProvider = ({ children }) => {
         signUp,
         logout,
         resetPassword,
+        loginWithOAuth, 
         isAuthenticated: !!user,
     };
 

@@ -11,7 +11,7 @@ const LoginSignup = () => {
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [mode, setMode] = useState('login'); // 'login' or 'signup'
-    const { user, loading, login, signUp, error } = useAuth();
+    const { user, loading, login, signUp, error, loginWithOAuth } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -79,7 +79,24 @@ const LoginSignup = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    };  
+
+
+        
+
+        const handleOAuthLogin = async (provider) => {
+            try {
+                
+                await loginWithOAuth(provider);
+            } catch (error) {
+                console.error('OAuth login error:', error);
+            } finally {
+                
+            }
+        }
+    
+
+
 
     if (loading) {
         return (
@@ -163,6 +180,7 @@ const LoginSignup = () => {
                     </div>
 
                     <div>
+                        
                         <button
                             type="submit"
                             disabled={isLoading}
@@ -172,6 +190,21 @@ const LoginSignup = () => {
                         </button>
                     </div>
                 </form>
+                <div className="oauth-container">
+                    <button
+                        onClick={() => handleOAuthLogin('Google')}
+                        disabled={loading}
+                        className="oauth-button google"
+                    >
+                        {loading ? 'Loading...' : 'Continue with Google'}
+                    </button>
+
+                    {error && (
+                        <div className="error-message">
+                            {error.message}
+                        </div>
+                    )}
+                </div>
 
                 <div className="text-center">
                     <button
