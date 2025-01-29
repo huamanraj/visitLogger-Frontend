@@ -104,8 +104,8 @@ export const AuthProvider = ({ children }) => {
             setError(null);
             await account.createOAuth2Session(
                 OAuthProvider.Google,
-                window.location.origin + '/dashboard', // Ensure correct origin
-                window.location.origin + '/login'
+                `${window.location.origin}/dashboard`,
+                `${window.location.origin}/login`
             );
         } catch (error) {
             const authError = new AuthError(
