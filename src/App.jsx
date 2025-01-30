@@ -8,7 +8,7 @@ import LandingPage from './pages/LandingPage';
 import DocumentationPage from './pages/DocumentationPage';
 import AnalyticsPage from './components/AnalyticsPage';
 import OAuthCallback from './contexts/OAuthCallback';
-
+import PrivacyPolicyAndTerms from './components/PrivacyPolicyAndTerms'
 
 const App = () => {
   return (
@@ -16,6 +16,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/terms" element={<PrivacyPolicyAndTerms />} />
           <Route path="/doc" element={<DocumentationPage/>} />
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
