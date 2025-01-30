@@ -111,7 +111,13 @@ export const AuthProvider = ({ children }) => {
             const authError = new AuthError(
                 error?.message || 'OAuth login failed',
                 error?.code || 'UNKNOWN_ERROR'
+                
+                
             );
+            console.log(authError);
+            console.log('aman');
+            
+            
             setError(authError);
             throw authError;
         } finally {

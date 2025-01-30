@@ -10,6 +10,8 @@ import AnalyticsPage from './components/AnalyticsPage';
 import OAuthCallback from './contexts/OAuthCallback';
 import PrivacyPolicyAndTerms from './components/PrivacyPolicyAndTerms'
 
+
+
 const App = () => {
   return (
     <AuthProvider>
