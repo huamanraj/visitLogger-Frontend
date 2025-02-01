@@ -1,11 +1,12 @@
 // DocumentationPage.jsx
 import React from 'react';
-import { Code2, Copy, ExternalLink, Terminal, CheckCircle2 } from 'lucide-react';
+import { Code2, Copy, ExternalLink, Terminal, CheckCircle2, Key, Layout } from 'lucide-react';
 import { useState } from 'react';
 import logo from '../assets/logo.png'
 
 export default function DocumentationPage() {
     const [copied, setCopied] = useState(false);
+    const [copiedInline, setCopiedInline] = useState(false);
 
     const sampleScript = `<script>
   (function() {
@@ -13,7 +14,7 @@ export default function DocumentationPage() {
     const userId = "your_user_id";
     const ipAddress = window.location.hostname;
 
-     fetch('https://visitloggerbackend.vercel.app/track', {
+    fetch('https://visitloggerbackend.vercel.app/track', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,10 +31,12 @@ export default function DocumentationPage() {
   })();
 </script>`;
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(sampleScript);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+    const inlineScript = `<script src="https://visitloggerbackend.vercel.app/track.js?scriptId=your_script_id&userId=your_user_id" async></script>`;
+
+    const handleCopy = (text, setCopyState) => {
+        navigator.clipboard.writeText(text);
+        setCopyState(true);
+        setTimeout(() => setCopyState(false), 2000);
     };
 
     return (
@@ -63,32 +66,20 @@ export default function DocumentationPage() {
                         <div className="space-y-4">
                             <div className="flex items-center space-x-3">
                                 <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                                    <Terminal className="w-4 h-4 text-blue-500" />
+                                    <Key className="w-4 h-4 text-blue-500" />
                                 </div>
-                                <h2 className="text-xl font-semibold">1. Add the tracking script</h2>
+                                <h2 className="text-xl font-semibold">1. Create a tracking script</h2>
                             </div>
                             <p className="text-gray-400">
-                                Copy and paste this script into your website's HTML, just before the closing &lt;/body&gt; tag.
+                                First, create a new script from your dashboard. You'll receive a unique scriptId and userId.
                             </p>
-                            <div className="relative">
-                                <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm">
-                                    <div className="absolute right-4 top-4">
-                                        <button
-                                            onClick={handleCopy}
-                                            className="flex items-center space-x-2 px-3 py-1 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
-                                        >
-                                            {copied ? (
-                                                <CheckCircle2 className="w-4 h-4 text-green-500" />
-                                            ) : (
-                                                <Copy className="w-4 h-4" />
-                                            )}
-                                            <span>{copied ? 'Copied!' : 'Copy'}</span>
-                                        </button>
-                                    </div>
-                                    <pre className="text-gray-300 overflow-x-auto">
-                                        {sampleScript}
-                                    </pre>
-                                </div>
+                            <div className="bg-gray-900 rounded-lg p-4">
+                                <ul className="list-disc list-inside space-y-2 text-gray-400">
+                                    <li>Go to your dashboard</li>
+                                    <li>Click on "Create New Script"</li>
+                                    <li>Name your script and select the website you want to track</li>
+                                    <li>Copy the generated scriptId and userId</li>
+                                </ul>
                             </div>
                         </div>
 
@@ -96,26 +87,105 @@ export default function DocumentationPage() {
                         <div className="space-y-4">
                             <div className="flex items-center space-x-3">
                                 <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                                    <Code2 className="w-4 h-4 text-blue-500" />
+                                    <Layout className="w-4 h-4 text-blue-500" />
                                 </div>
-                                <h2 className="text-xl font-semibold">2. View your analytics</h2>
+                                <h2 className="text-xl font-semibold">2. Choose your implementation method</h2>
                             </div>
                             <p className="text-gray-400">
-                                Once installed, your website traffic will be automatically tracked. Visit your dashboard to view analytics.
+                                You have two options to implement the tracking script:
                             </p>
-                            <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
-                                <span>Open Dashboard</span>
-                                <ExternalLink className="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
+                            
+                            {/* Option A */}
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-medium">Option A: Inline Script (Recommended)</h3>
+                                <p className="text-gray-400">
+                                    Add this single line to your website's &lt;head&gt; section. Replace 'your_script_id' and 'your_user_id' with your actual IDs.
+                                </p>
+                                <div className="relative">
+                                    <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm">
+                                        <div className="absolute right-4 top-4">
+                                            <button
+                                                onClick={() => handleCopy(inlineScript, setCopiedInline)}
+                                                className="flex items-center space-x-2 px-3 py-1 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
+                                            >
+                                                {copiedInline ? (
+                                                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                                ) : (
+                                                    <Copy className="w-4 h-4" />
+                                                )}
+                                                <span>{copiedInline ? 'Copied!' : 'Copy'}</span>
+                                            </button>
+                                        </div>
+                                        <pre className="text-gray-300 overflow-x-auto">
+                                            {inlineScript}
+                                        </pre>
+                                    </div>
+                                </div>
+                            </div>
 
-                    {/* Additional Info */}
-                    <div className="mt-12 p-4 border border-gray-800 rounded-lg bg-gray-900/50">
-                        <h3 className="text-lg font-medium mb-2">Need Help?</h3>
-                        <p className="text-gray-400">
-                            If you have any questions or need assistance, our support team is here to help.
-                        </p>
+                            {/* Option B */}
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-medium">Option B: Full Script</h3>
+                                <p className="text-gray-400">
+                                    Alternatively, you can use the full script version. Add this before the closing &lt;/body&gt; tag.
+                                </p>
+                                <div className="relative">
+                                    <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm">
+                                        <div className="absolute right-4 top-4">
+                                            <button
+                                                onClick={() => handleCopy(sampleScript, setCopied)}
+                                                className="flex items-center space-x-2 px-3 py-1 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
+                                            >
+                                                {copied ? (
+                                                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                                ) : (
+                                                    <Copy className="w-4 h-4" />
+                                                )}
+                                                <span>{copied ? 'Copied!' : 'Copy'}</span>
+                                            </button>
+                                        </div>
+                                        <pre className="text-gray-300 overflow-x-auto">
+                                            {sampleScript}
+                                        </pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Step 3 */}
+                        <div className="space-y-4">
+                            <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                    <Terminal className="w-4 h-4 text-blue-500" />
+                                </div>
+                                <h2 className="text-xl font-semibold">3. Verify Installation</h2>
+                            </div>
+                            <p className="text-gray-400">
+                                After adding the script, visit your website and check your dashboard. You should see traffic data appearing within a few minutes.
+                            </p>
+                            <div className="bg-gray-900 rounded-lg p-4">
+                                <ul className="list-disc list-inside space-y-2 text-gray-400">
+                                    <li>Visit your website</li>
+                                    <li>Check browser console for any errors</li>
+                                    <li>View your dashboard to confirm data collection</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Additional Info */}
+                        <div className="mt-12 p-4 border border-gray-800 rounded-lg bg-gray-900/50 hover:bg-gray-900/70 transition-colors cursor-pointer">
+                            <a href="https://aman-raj.xyz" target="_blank" rel="noopener noreferrer" className="block">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h3 className="text-lg font-medium mb-2">Need Help?</h3>
+                                        <p className="text-gray-400">
+                                            If you have any questions or need assistance, our support team is here to help.
+                                        </p>
+                                    </div>
+                                    <ExternalLink className="w-5 h-5 text-gray-400" />
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
