@@ -1,13 +1,20 @@
 // LandingPage.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Activity, ArrowRight, Code2, Globe2, Users, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import logo from '../assets/logo.png'
-
-
 
 export default function LandingPage() {
     let navigate = useNavigate();
+    const { user } = useAuth();
+
+    useEffect(() => {
+        if (user) {
+            navigate('/dashboard');
+        }
+    }, [user, navigate]);
+
     return (
         <div className="min-h-screen bg-black text-white overflow-hidden relative selection:bg-white/10">
             {/* Gradient background */}

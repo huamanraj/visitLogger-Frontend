@@ -2,12 +2,18 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Databases, Query, Client } from 'appwrite';
 import { Link } from 'react-router-dom';
+import Footer from './Footer';
+import { IoIosLogOut } from "react-icons/io";
+import { toast } from 'react-toastify';
+
+
 const Dashboard = () => {
     const { user, logout } = useAuth();
     const [scripts, setScripts] = useState([]);
     const [scriptName, setScriptName] = useState('');
     const [expandedScriptId, setExpandedScriptId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
     const [copyFeedback, setCopyFeedback] = useState('');
 
     
@@ -39,11 +45,12 @@ const Dashboard = () => {
 
     const createScript = async () => {
         if (!scriptName) {
-            alert('Script name is required');
+            toast.error('Script name is required');
             return;
         }
 
         try {
+            setIsCreating(true);
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/script`, {
                 method: 'POST',
                 headers: {
@@ -54,15 +61,17 @@ const Dashboard = () => {
 
             const data = await response.json();
             if (response.ok) {
-                // setScripts([...scripts, { scriptId: data.scriptId, scriptName, script: data.script, userId: data.userId }]);
                 fetchScripts(user.$id); 
                 setScriptName('');
-                alert('Script created successfully!');
+                toast.success('Script created successfully!');
             } else {
-                alert('Error creating script');
+                toast.error('Error creating script');
             }
         } catch (error) {
             console.error('Error creating script:', error);
+            toast.error('Failed to create script');
+        } finally {
+            setIsCreating(false);
         }
     };
 
@@ -78,8 +87,7 @@ const Dashboard = () => {
 
     const copyScript = (scriptUrl) => {
         navigator.clipboard.writeText(scriptUrl);
-        setCopyFeedback('Copied!');
-        setTimeout(() => setCopyFeedback(''), 2000);
+        toast.success('Script copied to clipboard!');
     };
 
 
@@ -93,37 +101,44 @@ const Dashboard = () => {
 
     return (
 
-        <div className="min-h-screen bg-[#000000] text-white p-8">
+        <div className="min-h-screen  bg-[#000000] text-white pt-8 px-5">
             <div className="max-w-4xl mx-auto">
                 {/* Header Section */}
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
                     <button
+                    title='Logout'
                         onClick={handleLogout}
-                        className="bg-white hover:bg-gray-200 text-black px-4 py-2 rounded-md transition-all duration-200 text-sm font-medium"
+                        className="bg-gray-300 cursor-crosshair hover:bg-gray-200 text-black px-4 py-2 rounded-md transition-all duration-200 text-sm font-medium"
                     >
-                        Logout
+                    <IoIosLogOut size={15} />
                     </button>
                 </div>
 
                 {/* Script Creation Section */}
                 <div className="mb-8 space-y-4">
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 flex-col sm:flex-row">  {/* Use flex column on mobile and row on larger screens */}
                         <input
                             type="text"
                             placeholder="Enter script name..."
                             value={scriptName}
                             onChange={(e) => setScriptName(e.target.value)}
-                            className="flex-1 p-3 border border-gray-800 rounded-md bg-[#111111] text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
+                            className="flex-1 p-3 border border-gray-800 rounded-md bg-[#111111] text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition-all text-sm sm:text-base"
                         />
                         <button
                             onClick={createScript}
-                            className="bg-white hover:bg-gray-200 text-black px-6 py-3 rounded-md transition-all duration-200 text-sm font-medium whitespace-nowrap"
+                            disabled={isCreating}
+                            className={`bg-gray-200 cursor-pointer hover:bg-gray-200 text-black px-6 py-3 rounded-md transition-all duration-200 text-sm sm:text-base whitespace-nowrap ${isCreating ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
-                            Create Script
+                            {isCreating ? (
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black mx-auto" />
+                            ) : (
+                                'Create Script'
+                            )}
                         </button>
                     </div>
                 </div>
+
 
                 {/* Scripts List Section */}
                 <div className="mb-8 space-y-4">
@@ -170,7 +185,9 @@ const Dashboard = () => {
                 </div>
 
             </div>
+            <Footer />
         </div>
+        
     );
 };
 

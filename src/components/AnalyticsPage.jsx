@@ -4,7 +4,7 @@ import AnalyticsGraph from "./AnalyticsGraph"; // Import AnalyticsGraph Componen
 import logo from '../assets/logo.png'
 import { IoIosArrowBack } from "react-icons/io";
 import AnalyticsTable from "./AnalyticsTable";
-
+import Footer from './Footer';
 
 const AnalyticsPage = () => {
     const { scriptId } = useParams();
@@ -51,7 +51,7 @@ const AnalyticsPage = () => {
         fetchAnalytics();
     }, [scriptId, currentPage]);
 
-    
+
     // Handle pagination button clicks
     const handlePageChange = (newPage) => {
         if (newPage > 0 && newPage <= totalPages) {
@@ -123,6 +123,7 @@ const AnalyticsPage = () => {
                     </p>
                 )}
             </div>
+            <Footer />
         </div>
     );
 };

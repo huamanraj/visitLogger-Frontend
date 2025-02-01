@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-
+import { toast } from 'react-toastify';
 
 const LoginSignup = () => {
     const [formData, setFormData] = useState({
@@ -62,7 +62,10 @@ const LoginSignup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!validateForm()) return;
+        if (!validateForm()) {
+            toast.error('Please check your input fields');
+            return;
+        }
 
         setIsLoading(true);
         try {
@@ -73,31 +76,20 @@ const LoginSignup = () => {
             }
             navigate('/dashboard');
         } catch (err) {
-            setErrors((prev) => ({
-                ...prev,
-                submit: err.message || 'An error occurred. Please try again.',
-            }));
+            toast.error(err.message || 'An error occurred. Please try again.');
         } finally {
             setIsLoading(false);
         }
     };  
 
-
-        
-
-        const handleOAuthLogin = async (provider) => {
-            try {
-                
-                await loginWithOAuth(provider);
-            } catch (error) {
-                console.error('OAuth login error:', error);
-            } finally {
-                
-            }
+    const handleOAuthLogin = async (provider) => {
+        try {
+            await loginWithOAuth(provider);
+        } catch (error) {
+            console.error('OAuth login error:', error);
+            toast.error('Failed to login with OAuth');
         }
-    
-
-
+    }
 
     if (loading) {
         return (

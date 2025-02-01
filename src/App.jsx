@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import LoginSignup from './components/LoginSignup';
@@ -9,6 +8,8 @@ import DocumentationPage from './pages/DocumentationPage';
 import AnalyticsPage from './components/AnalyticsPage';
 import OAuthCallback from './contexts/OAuthCallback';
 import PrivacyPolicyAndTerms from './components/PrivacyPolicyAndTerms'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -26,6 +27,18 @@ const App = () => {
           <Route path="*" element={<Navigate to="/login" />} />
           <Route path="/auth/callback" element={<OAuthCallback />} />
         </Routes>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </Router>
     </AuthProvider>
   );
