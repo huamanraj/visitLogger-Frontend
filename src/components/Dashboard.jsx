@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 const Dashboard = () => {
     const { user, logout } = useAuth();
     const [scripts, setScripts] = useState([]);
-    const [selectedScript, setSelectedScript] = useState(null);
-    const [analytics, setAnalytics] = useState([]);
     const [scriptName, setScriptName] = useState('');
     const [expandedScriptId, setExpandedScriptId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +23,7 @@ const Dashboard = () => {
 
     const fetchScripts = async (userId) => {
         try {
+            setIsLoading(true);
             const data = await databases.listDocuments(
                 import.meta.env.VITE_APPWRITE_DATABASE_ID,
                 import.meta.env.VITE_APPWRITE_SCRIPTS_COLLECTION_ID,
@@ -33,6 +32,8 @@ const Dashboard = () => {
             setScripts(data.documents);
         } catch (error) {
             console.error('Error fetching scripts:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -53,7 +54,8 @@ const Dashboard = () => {
 
             const data = await response.json();
             if (response.ok) {
-                setScripts([...scripts, { scriptId: data.scriptId, scriptName, script: data.script, userId: data.userId }]);
+                // setScripts([...scripts, { scriptId: data.scriptId, scriptName, script: data.script, userId: data.userId }]);
+                fetchScripts(user.$id); 
                 setScriptName('');
                 alert('Script created successfully!');
             } else {
@@ -90,6 +92,7 @@ const Dashboard = () => {
         
 
     return (
+
         <div className="min-h-screen bg-[#000000] text-white p-8">
             <div className="max-w-4xl mx-auto">
                 {/* Header Section */}
@@ -153,7 +156,7 @@ const Dashboard = () => {
                                                 Copy Script
                                             </button>
                                             <Link
-                                                to={`/analytics/${script.scriptId}`}
+                                                to={`/analytics/${script.scriptId}?scriptName=${encodeURIComponent(script.scriptName)}`}
                                                 className="w-full bg-white hover:bg-gray-200 text-black p-2 rounded-md transition-all text-sm font-medium text-center block"
                                             >
                                                 View Analytics
@@ -166,36 +169,6 @@ const Dashboard = () => {
                     </ul>
                 </div>
 
-                {/* Analytics Section */}
-                {selectedScript && (
-                    <div className="space-y-4">
-                        <h2 className="text-xl font-semibold tracking-tight">
-                            Analytics for {scripts.find(s => s.scriptId === selectedScript)?.scriptName}
-                        </h2>
-                        <div className="border border-gray-800 rounded-md overflow-hidden">
-                            <table className="w-full">
-                                <thead className="bg-[#111111]">
-                                    <tr>
-                                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">IP Address</th>
-                                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">Timestamp</th>
-                                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">Agent</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-800">
-                                    {analytics.map((data, index) => (
-                                        <tr key={index} className="hover:bg-[#111111] transition-all">
-                                            <td className="py-3 px-4 text-sm text-gray-300">{data.ipAddress}</td>
-                                            <td className="py-3 px-4 text-sm text-gray-300">{data.timestamp}</td>
-                                            <td className="py-3 px-4 text-sm text-gray-300 truncate max-w-xs">
-                                                {data.userAgent}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );
