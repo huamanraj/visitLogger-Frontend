@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 
+
 const LoginSignup = () => {
     const [formData, setFormData] = useState({
         email: '',
@@ -184,19 +185,19 @@ const LoginSignup = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md text-sm font-medium cursor-pointer text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                         >
                             {isLoading ? 'Processing...' : mode === 'login' ? 'Sign in' : 'Sign up'}
                         </button>
                     </div>
                 </form>
-                <div className="oauth-container">
+                <div className="oauth-container flex justify-center">
                     <button
                         onClick={() => handleOAuthLogin('Google')}
                         disabled={loading}
-                        className="oauth-button google"
+                        className="oauth-button google cursor-pointer w-full flex justify-center py-2 px-4 border border-transparent rounded-md text-sm font-medium text-gray-300 bg-gray-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                     >
-                        {loading ? 'Loading...' : 'Continue with Google'}
+                      {loading ? 'Loading...' : `Continue with Google`}
                     </button>
 
                     {error && (
@@ -206,13 +207,13 @@ const LoginSignup = () => {
                     )}
                 </div>
 
-                <div className="text-center">
+                <div className="text-center ">
                     <button
                         onClick={() => {
                             setMode(mode === 'login' ? 'signup' : 'login');
                             setErrors({});
                         }}
-                        className="text-blue-500 hover:text-blue-400 text-sm"
+                        className="text-blue-500 cursor-pointer hover:text-blue-400 text-sm"
                     >
                         {mode === 'login'
                             ? "Don't have an account? Sign up"
@@ -222,9 +223,9 @@ const LoginSignup = () => {
 
                 {mode === 'login' && (
                     <div className="text-center">
-                        <Link to="/forgot-password" className="text-blue-500 hover:text-blue-400 text-sm">
+                        {/* <Link to="/forgot-password" className="text-blue-500 hover:text-blue-400 text-sm">
                             Forgot your password?
-                        </Link>
+                        </Link> */}
                     </div>
                 )}
             </div>

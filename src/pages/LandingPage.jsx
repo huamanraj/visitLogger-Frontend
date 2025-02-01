@@ -2,6 +2,9 @@
 import React from 'react';
 import { Activity, ArrowRight, Code2, Globe2, Users, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png'
+
+
 
 export default function LandingPage() {
     let navigate = useNavigate();
@@ -19,8 +22,10 @@ export default function LandingPage() {
                 <nav className="max-w-7xl mx-auto px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                            <Activity className="w-5 h-5 text-white" />
-                            <span className="font-mono font-bold">visit_logger</span>
+                            <img src={logo} className=" h-10"  alt="" />
+
+                            {/* <Activity className="w-5 h-5 text-white" />
+                            <span className="font-mono font-bold">visit_logger</span> */}
                         </div>
                         <div  className="hidden md:flex items-center space-x-8">
                             <button onClick={() => { navigate('/doc') }} className="px-4 py-1.5 text-sm font-medium hover:text-white/70 transition-colors">

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Code2, Copy, ExternalLink, Terminal, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
+import logo from '../assets/logo.png'
 
 export default function DocumentationPage() {
     const [copied, setCopied] = useState(false);

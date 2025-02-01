@@ -43,7 +43,7 @@ const Dashboard = () => {
         }
 
         try {
-            const response = await fetch('https://visitloggerbackend.vercel.app/script', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/script`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,18 +64,7 @@ const Dashboard = () => {
         }
     };
 
-    const fetchAnalytics = async (scriptId) => {
-        try {
-            const response = await fetch(`https://visitloggerbackend.vercel.app/analytics/${scriptId}`);
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-            const data = await response.json();
-            setAnalytics(data);
-        } catch (error) {
-            console.error('Error fetching analytics:', error);
-        }
-    };
+    
 
     const handleLogout = async () => {
         try {
@@ -85,14 +74,20 @@ const Dashboard = () => {
         }
     };
 
-    const copyScript = (script) => {
-        navigator.clipboard.writeText(script);
-        alert('Script copied to clipboard!');
+    const copyScript = (scriptUrl) => {
+        navigator.clipboard.writeText(scriptUrl);
+        setCopyFeedback('Copied!');
+        setTimeout(() => setCopyFeedback(''), 2000);
     };
+
 
     const toggleAccordion = (scriptId) => {
         setExpandedScriptId(expandedScriptId === scriptId ? null : scriptId);
     };
+
+
+
+        
 
     return (
         <div className="min-h-screen bg-[#000000] text-white p-8">
@@ -145,11 +140,14 @@ const Dashboard = () => {
                                 {expandedScriptId === script.scriptId && (
                                     <div className="p-4 border-t border-gray-800">
                                         <pre className="p-3 bg-[#0a0a0a] rounded-md overflow-x-auto">
-                                            <code className="text-sm text-gray-300 font-mono">{script.script}</code>
+                                            <code className="text-sm text-gray-300 font-mono">
+                                                {`<script src="${script.scriptUrl}" async></script>`}
+                                            </code>
+
                                         </pre>
                                         <div className="mt-4 space-y-2">
                                             <button
-                                                onClick={() => copyScript(script.script)}
+                                                onClick={() => copyScript(`<script src="${script.scriptUrl}" async></script>`)}
                                                 className="w-full bg-[#111111] hover:bg-[#1a1a1a] border border-gray-800 text-white p-2 rounded-md transition-all text-sm font-medium"
                                             >
                                                 Copy Script
